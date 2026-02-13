@@ -17,4 +17,8 @@ export const analyticsRoutes: FastifyPluginAsyncZod = async (app) => {
         const buffer = await ChartService.generateLineChart('Weekly Done Tasks', labels, data);
         reply.type('image/png').send(buffer);
     });
+
+    app.get('/productivity', async (req, reply) => {
+        return StatsService.getMonthlyProductivity(req.user.id);
+    });
 }

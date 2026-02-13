@@ -1,6 +1,5 @@
 import { prisma } from '../app';
 import { startOfWeek, endOfWeek, subDays, format } from 'date-fns';
-import { TaskStatus } from '@prisma/client';
 
 export class StatsService {
     static async getWeeklyTaskStats(userId: string) {
@@ -11,7 +10,7 @@ export class StatsService {
         const tasks = await prisma.task.findMany({
             where: {
                 userId,
-                status: TaskStatus.DONE,
+                status: 'DONE',
                 updatedAt: { gte: start, lte: end }
             }
         });
@@ -25,7 +24,7 @@ export class StatsService {
         }
 
         const counts = days.map(day => {
-            const count = tasks.filter(t => format(t.updatedAt, 'yyyy-MM-dd') === day).length;
+            const count = tasks.filter((t: any) => format(t.updatedAt, 'yyyy-MM-dd') === day).length;
             return { date: day, count };
         });
 
@@ -35,5 +34,38 @@ export class StatsService {
         };
     }
 
-    // Add more analytics logic needed for charts
+    static async getMonthlyProductivity(userId: string) {
+        const today = new Date();
+        const start = subDays(today, 30);
+
+        const tasks = await prisma.task.findMany({
+            where: {
+                userId,
+                status: 'DONE',
+                updatedAt: { gte: start }
+            }
+        });
+
+        // Group by 3-day intervals to smooth the chart or just daily for last 30 days
+        // Let's do daily for last 14 days for a cleaner chart, or weekly Trend?
+        // User asked for "Unumdorlik Trendi" (Productivity Trend). 
+        // Let's return daily counts for the last 30 days.
+
+        const days: string[] = [];
+        for (let i = 0; i < 30; i++) {
+            const d = subDays(today, 29 - i); // Start from 30 days ago
+            days.push(format(d, 'yyyy-MM-dd'));
+        }
+
+        const counts = days.map(day => {
+            const count = tasks.filter((t: any) => format(t.updatedAt, 'yyyy-MM-dd') === day).length;
+            // Weighted productivity? For now just count.
+            return { date: day, count };
+        });
+
+        return {
+            totalDone30Days: tasks.length,
+            dailyTrend: counts
+        };
+    }
 }

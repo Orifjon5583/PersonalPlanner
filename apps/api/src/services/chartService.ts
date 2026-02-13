@@ -12,4 +12,11 @@ export class ChartService {
         console.warn('Chart generation is disabled due to missing canvas dependency.');
         return Buffer.from(''); // Return empty buffer
     }
+
+    static async generateWeeklyProgressChart(stats: any) {
+        // stats: { date: string, count: number }[]
+        const labels = stats.map((s: any) => s.date);
+        const data = stats.map((s: any) => s.count);
+        return this.generateBarChart('Weekly Tasks', labels, data, []);
+    }
 }

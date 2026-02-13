@@ -35,6 +35,14 @@ app.register(jwt, {
     secret: env.JWT_ACCESS_SECRET,
 });
 
+app.decorate('authenticate', async (request: any, reply: any) => {
+    try {
+        await request.jwtVerify();
+    } catch (err) {
+        reply.send(err);
+    }
+});
+
 app.register(authRoutes, { prefix: '/api/auth' });
 app.register(taskRoutes, { prefix: '/api/tasks' });
 app.register(financeRoutes, { prefix: '/api/finance' });

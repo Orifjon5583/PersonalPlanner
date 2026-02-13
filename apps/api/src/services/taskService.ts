@@ -160,6 +160,9 @@ export class TaskService {
                 }
             }
         }
-        return plannedTasks;
+        return {
+            planned: plannedTasks.length,
+            leftover: backlog.length - plannedTasks.length
+        };
     }
 }

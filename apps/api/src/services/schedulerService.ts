@@ -115,5 +115,40 @@ export class SchedulerService {
                 }
             }
         });
+        // 2. Task Reminder (30 mins before)
+        cron.schedule('* * * * *', async () => {
+            console.log('Running Task Reminder Job');
+            const now = new Date();
+            const targetTimeStart = new Date(now.getTime() + 30 * 60000); // Now + 30 mins
+            const targetTimeEnd = new Date(targetTimeStart.getTime() + 60000); // 1 minute window
+
+            // Find tasks starting in the next 30-31 minutes
+            const tasks = await prisma.task.findMany({
+                where: {
+                    planned: true,
+                    status: { not: TaskStatus.DONE },
+                    startAt: {
+                        gte: targetTimeStart,
+                        lt: targetTimeEnd
+                    },
+                    user: { telegramChatId: { not: null } }
+                },
+                include: { user: true }
+            });
+
+            for (const task of tasks) {
+                if (!task.user.telegramChatId) continue;
+
+                const timeStr = task.startAt ? format(task.startAt, 'HH:mm') : '??:??';
+                const message = `⚠️ **Eslatma**: "${task.title}" vazifasi boshlanishiga 30 daqiqa qoldi!\n🕒 Boshlanish vaqti: ${timeStr}`;
+
+                try {
+                    await bot.telegram.sendMessage(task.user.telegramChatId, message, { parse_mode: 'Markdown' });
+                    console.log(`Reminder sent to ${task.userId} for task ${task.id}`);
+                } catch (error) {
+                    console.error(`Failed to send reminder for task ${task.id}:`, error);
+                }
+            }
+        });
     }
 }

@@ -31,6 +31,10 @@ export const financeRoutes: FastifyPluginAsyncZod = async (app) => {
         return FinanceService.addExpense(req.user.id, { categoryId, amount, spentAt, note });
     });
 
+    app.get('/transactions', async (req) => {
+        return FinanceService.getTransactions(req.user.id);
+    });
+
     app.get('/summary', {
         schema: {
             querystring: z.object({

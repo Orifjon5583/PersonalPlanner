@@ -40,7 +40,7 @@ bot.command('today', async (ctx) => {
     let msg = `📅 **Bugungi Reja**:\n`;
     if (tasks.length === 0) msg += `(Rejalashtirilgan ishlar yo‘q)\n`;
 
-    tasks.forEach(t => {
+    tasks.forEach((t: any) => {
         const time = t.startAt ? format(t.startAt, 'HH:mm') : '??:??';
         const icon = t.status === TaskStatus.DONE ? '✅' : t.priority === TaskPriority.IMPORTANT ? '🔴' : t.priority === TaskPriority.NORMAL ? '🟠' : '🔵';
         msg += `${icon} ${time} - ${t.title} (${t.durationMinutes}m)\n`;
@@ -48,7 +48,7 @@ bot.command('today', async (ctx) => {
 
     if (backlog.length > 0) {
         msg += `\n📌 **Muhim (Rejasiz)**:\n`;
-        backlog.forEach(t => {
+        backlog.forEach((t: any) => {
             msg += `🔴 ${t.title} (/plan qiling)\n`;
         });
     }
@@ -59,53 +59,62 @@ bot.command('today', async (ctx) => {
 // /plan
 bot.command('plan', async (ctx) => {
     const userId = await getUserId(ctx);
-    if (!userId) return ctx.reply('Auth required.');
+    if (!userId) return ctx.reply('⚠️ Hisobingiz bog‘lanmagan.');
 
-    try {
-        const planned = await TaskService.autoPlan(userId, new Date());
-        if (planned.length > 0) {
-            let msg = `✅ **Avtomatik rejalashtirildi**:\n`;
-            planned.forEach(t => {
-                const time = t.startAt ? format(t.startAt, 'HH:mm') : '??:??';
-                msg += `+ ${time} ${t.title}\n`;
-            });
-            ctx.replyWithMarkdown(msg);
-        } else {
-            ctx.reply('⚠️ Bo‘sh vaqt yoki backlogda mos task topilmadi.');
-        }
-    } catch (e) {
-        ctx.reply('Xatolik yuz berdi.');
-    }
+    const result = await TaskService.autoPlan(userId, new Date());
+    ctx.reply(`✅ Rejalashtirish yakunlandi!\nRejalashtirilgan: ${result.planned}\nQoldirildi: ${result.leftover}`);
 });
 
-// /add Title; 2024-02-12 14:00; 60; IMPORTANT
+// /stats
+bot.command('stats', async (ctx) => {
+    const userId = await getUserId(ctx);
+    if (!userId) return ctx.reply('⚠️ Hisobingiz bog‘lanmagan.');
+
+    const stats = await StatsService.getWeeklyTaskStats(userId);
+    const chartBuffer = await ChartService.generateWeeklyProgressChart(stats);
+
+    ctx.replyWithPhoto({ source: chartBuffer }, { caption: '📊 Haftalik hisobot' });
+});
+
+// /add <title>
 bot.command('add', async (ctx) => {
     const userId = await getUserId(ctx);
-    if (!userId) return ctx.reply('Auth required.');
+    if (!userId) return ctx.reply('⚠️ Hisobingiz bog‘lanmagan.');
 
-    const text = (ctx.message as any).text.replace('/add ', '');
-    const parts = text.split(';').map((p: string) => p.trim());
+    const text = ctx.message.text.split(' ').slice(1).join(' ');
+    if (!text) return ctx.reply('⚠️ Iltimos, vazifa nomini kiriting. Masalan: /add Kitob o‘qish');
 
-    if (parts.length < 1) return ctx.reply('Format: /add Title; [YYYY-MM-DD HH:mm]; [Duration]; [Priority]');
+    await TaskService.create(userId, { title: text, priority: TaskPriority.NORMAL, durationMinutes: 30 });
+    ctx.reply(`✅ Vazifa qo‘shildi: "${text}"`);
+});
 
-    const title = parts[0];
-    const dateStr = parts[1]; // Optional
-    const duration = parts[2] ? parseInt(parts[2]) : 60;
-    const priorityStr = parts[3]?.toUpperCase() || 'NORMAL';
+// /done <id> (simplified for now, maybe interactive later)
+bot.command('help', (ctx) => {
+    ctx.reply(
+        `🤖 **Personal Planner Bot**\n\n` +
+        `/today - Bugungi vazifalar\n` +
+        `/add <nomi> - Tezkor vazifa qo‘shish\n` +
+        `/plan - Kunni avtomatik rejalashtirish\n` +
+        `/stats - Haftalik statistika\n` +
+        `/start <kod> - Web hisobni bog‘lash`
+    );
+});
 
-    const priority = Object.values(TaskPriority).includes(priorityStr as any) ? priorityStr as TaskPriority : TaskPriority.NORMAL;
+// /start <token>
+bot.command('start', async (ctx) => {
+    const args = ctx.message.text.split(' ');
+    if (args.length === 2) {
+        const token = args[1];
+        // Link logic here (update user telegramChatId where token matches)
+        // For now, let's assume the user sends their API key or a specialized link token
+        // In a real app, you'd match a short-lived token to a user ID.
+        // Simplified: User sends "/start <userId>" (INSECURE for production, but okay for MVP demo)
 
-    try {
-        await TaskService.create(userId, {
-            title,
-            priority,
-            durationMinutes: duration,
-            startAt: (dateStr && dateStr.length > 5) ? new Date(dateStr).toISOString() : undefined
-        });
-        ctx.reply('✅ Task qo‘shildi!');
-    } catch (e: any) {
-        ctx.reply(`❌ Xatolik: ${e.message}`);
+        // BETTER: Web app shows a 6-digit code. User sends code.
+        // We will implement a simple "mock" linking if needed or assume manually set in DB for now.
+        return ctx.reply('🔗 Hisobni bog‘lash uchun web-saytdagi QR kodni skanerlang yoki kodni kiriting (Tez orada).');
     }
+    ctx.reply('👋 Salom! Men sizning shaxsiy yordamchingizman. Web-sayt bilan bog‘lanish uchun ko‘rsatmalarga amal qiling.');
 });
 
 // /done <taskId> (Simplified: /done last or select via UI? For now user implementation requested command line. Let's list pending tasks with buttons?)
@@ -135,7 +144,7 @@ bot.command('done', async (ctx) => {
 
     if (tasks.length === 0) return ctx.reply('Bugunga bajarilmagan tasklar yo‘q.');
 
-    const buttons = tasks.map(t => [Markup.button.callback(`✅ ${t.title}`, `done:${t.id}`)]);
+    const buttons = tasks.map((t: any) => [Markup.button.callback(`✅ ${t.title}`, `done:${t.id}`)]);
     ctx.reply('Qaysi taskni bajardingiz?', Markup.inlineKeyboard(buttons));
 });
 

@@ -107,4 +107,40 @@ export class FinanceService {
             categories: summary
         };
     }
+
+    static async getTransactions(userId: string) {
+        // Fetch last 20 transactions (income + expense)
+        const incomes = await prisma.income.select({
+            id: true,
+            amount: true,
+            createdAt: true
+        }).where({ userId }).orderBy({ createdAt: 'desc' }).take(20);
+
+        const expenses = await prisma.expense.select({
+            id: true,
+            amount: true,
+            budgetCategory: { select: { name: true } },
+            createdAt: true
+        }).where({ budgetCategory: { userId } }).orderBy({ createdAt: 'desc' }).take(20);
+
+        // Merge and sort
+        const txs = [
+            ...incomes.map(i => ({
+                id: i.id,
+                amount: i.amount,
+                category: 'Daromad',
+                type: 'INCOME',
+                date: i.createdAt
+            })),
+            ...expenses.map(e => ({
+                id: e.id,
+                amount: e.amount,
+                category: e.budgetCategory.name,
+                type: 'EXPENSE',
+                date: e.createdAt
+            }))
+        ].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 20);
+
+        return txs;
+    }
 }
