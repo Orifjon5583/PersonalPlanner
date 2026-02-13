@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskPriority {
+  IMPORTANT
+  NORMAL
+  FUTURE
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum BudgetType {
+  NECESSARY
+  COMFORT
+  SAVINGS
+}
+
+enum NotificationChannel {
+  TELEGRAM
+}
+
+enum NotificationType {
+  DAILY_PLAN
+  GAP_REMINDER
+  TASK_REMINDER
+  OVERDUE
+  WEEKLY_REPORT
+  MONTHLY_REPORT
+  FINANCE_WEEKLY
+  FINANCE_MONTHLY
+}
+
+model User {
+  id               String   @id @default(cuid())
+  name             String
+  email            String   @unique
+  passwordHash     String
+  timezone         String   @default("Asia/Tashkent")
+  telegramChatId   String?  @unique
+  telegramLinkCode String?  @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  tasks            Task[]
+  incomes          Income[]
+  categories       BudgetCategory[]
+  expenses         Expense[]
+  notifications    NotificationLog[]
+}
+
+model Task {
+  id              String       @id @default(cuid())
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title           String
+  description     String?
+  priority        TaskPriority @default(NORMAL)
+  status          TaskStatus   @default(TODO)
+
+  dueAt           DateTime?
+  startAt         DateTime?
+  endAt           DateTime?
+  durationMinutes Int          @default(60)
+  actualMinutes   Int?
+  planned         Boolean      @default(false)
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  notificationLogs NotificationLog[]
+}
+
+model Income {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month     String   // YYYY-MM
+  amount    Int
+  createdAt DateTime @default(now())
+}
+
+model BudgetCategory {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month       String     // YYYY-MM
+  type        BudgetType
+  name        String
+  percent     Int
+  limitAmount Int
+  createdAt   DateTime   @default(now())
+  expenses    Expense[]
+}
+
+model Expense {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   BudgetCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  amount     Int
+  spentAt    DateTime
+  note       String?
+  createdAt  DateTime @default(now())
+}
+
+model NotificationLog {
+  id        String             @id @default(cuid())
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId    String?
+  task      Task?              @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  channel   NotificationChannel @default(TELEGRAM)
+  type      NotificationType
+  sentAt    DateTime            @default(now())
+  meta      Json?
+}
