@@ -110,18 +110,24 @@ export class FinanceService {
 
     static async getTransactions(userId: string) {
         // Fetch last 20 transactions (income + expense)
-        const incomes = await prisma.income.select({
-            id: true,
-            amount: true,
-            createdAt: true
-        }).where({ userId }).orderBy({ createdAt: 'desc' }).take(20);
+        const incomes = await prisma.income.findMany({
+            select: { id: true, amount: true, createdAt: true },
+            where: { userId },
+            orderBy: { createdAt: 'desc' },
+            take: 20
+        });
 
-        const expenses = await prisma.expense.select({
-            id: true,
-            amount: true,
-            budgetCategory: { select: { name: true } },
-            createdAt: true
-        }).where({ budgetCategory: { userId } }).orderBy({ createdAt: 'desc' }).take(20);
+        const expenses = await prisma.expense.findMany({
+            select: {
+                id: true,
+                amount: true,
+                category: { select: { name: true } },
+                createdAt: true
+            },
+            where: { category: { userId } },
+            orderBy: { createdAt: 'desc' },
+            take: 20
+        });
 
         // Merge and sort
         const txs = [
@@ -135,7 +141,7 @@ export class FinanceService {
             ...expenses.map(e => ({
                 id: e.id,
                 amount: e.amount,
-                category: e.budgetCategory.name,
+                category: e.category.name,
                 type: 'EXPENSE',
                 date: e.createdAt
             }))
@@ -144,3 +150,4 @@ export class FinanceService {
         return txs;
     }
 }
+

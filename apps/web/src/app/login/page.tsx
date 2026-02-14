@@ -5,6 +5,8 @@ import { useAuth } from '../../components/AuthProvider';
 import { Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
+
+    const [platform, setPlatform] = useState<'select' | 'web' | 'telegram'>('select');
     const [isRegister, setIsRegister] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -20,6 +22,78 @@ export default function LoginPage() {
         }
     };
 
+    if (platform === 'select') {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+                <div className="w-full max-w-md mx-4 text-center">
+                    <h1 className="text-4xl font-bold text-blue-600 mb-2">Personal Planner</h1>
+                    <p className="text-gray-500 mb-8">Davom etish uchun platformani tanlang</p>
+
+                    <div className="grid gap-4">
+                        <button
+                            onClick={() => setPlatform('web')}
+                            className="flex items-center justify-between p-6 bg-white rounded-2xl shadow-md border border-gray-100 hover:border-blue-500 hover:shadow-lg transition-all group"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-blue-100 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    <User size={24} />
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-semibold text-gray-900">Web Sayt</h3>
+                                    <p className="text-sm text-gray-500">Brauzer orqali kirish</p>
+                                </div>
+                            </div>
+                            <ArrowRight size={20} className="text-gray-300 group-hover:text-blue-500 transition-colors" />
+                        </button>
+
+                        <button
+                            onClick={() => setPlatform('telegram')}
+                            className="flex items-center justify-between p-6 bg-white rounded-2xl shadow-md border border-gray-100 hover:border-blue-500 hover:shadow-lg transition-all group"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-blue-100 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    <Mail size={24} /> {/* Telegram icon usually requires external SVG, using Mail as placeholder */}
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-semibold text-gray-900">Telegram Bot</h3>
+                                    <p className="text-sm text-gray-500">Bot orqali boshqarish</p>
+                                </div>
+                            </div>
+                            <ArrowRight size={20} className="text-gray-300 group-hover:text-blue-500 transition-colors" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (platform === 'telegram') {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+                <div className="w-full max-w-md mx-4 text-center bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Telegram Bot</h2>
+                    <p className="text-gray-500 mb-6">Botimizga o'tish uchun quyidagi havolani bosing yoki skanerlang.</p>
+
+                    <a
+                        href="https://t.me/PersonalPlannerBot"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors mb-6"
+                    >
+                        Botga o'tish <ArrowRight size={18} />
+                    </a>
+
+                    <button
+                        onClick={() => setPlatform('select')}
+                        className="text-gray-400 hover:text-gray-600 text-sm"
+                    >
+                        Ortga qaytish
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
             <div className="w-full max-w-md mx-4">
@@ -33,6 +107,13 @@ export default function LoginPage() {
 
                 {/* Card */}
                 <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+                    <button
+                        onClick={() => setPlatform('select')}
+                        className="mb-4 text-sm text-gray-400 hover:text-blue-600 flex items-center gap-1"
+                    >
+                        ← Ortga
+                    </button>
+
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {isRegister && (
                             <div>
@@ -118,7 +199,7 @@ export default function LoginPage() {
 
                 {/* Demo credentials hint */}
                 <div className="mt-4 text-center text-xs text-gray-400">
-                    Demo: demo@planner.uz / demo123
+                    Demo: demo@planner.uz / demo123 (Orifjon Kenjaboyev)
                 </div>
             </div>
         </div>
