@@ -24,7 +24,7 @@ export default function TaskForm({ onAdd }: TaskFormProps) {
 
             // If token exists, send to backend
             if (token) {
-                const res = await fetch('http://localhost:3000/tasks', {
+                const res = await fetch('http://localhost:3001/api/tasks', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

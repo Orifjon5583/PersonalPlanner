@@ -4,7 +4,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Hardcoded for now as env is missing
-const botToken = process.env.TELEGRAM_BOT_TOKEN || '7699116128:AAEMdSkg-ix2iNBkE7KbaDIlkA2PZXFTkpg';
+const botToken = process.env.TELEGRAM_BOT_TOKEN;
 if (!botToken) throw new Error('TELEGRAM_BOT_TOKEN is missing');
 
-export const bot = new Telegraf(botToken);
+import { HttpsProxyAgent } from 'https-proxy-agent';
+
+const proxyUrl = process.env.PROXY_URL;
+const agent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined;
+
+export const bot = new Telegraf(botToken, {
+    telegram: {
+        agent: agent as any
+    }
+});

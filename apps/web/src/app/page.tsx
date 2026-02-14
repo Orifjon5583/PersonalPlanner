@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 
 export default function Home() {
@@ -17,10 +16,10 @@ export default function Home() {
             href="/dashboard"
             className="rounded-lg bg-blue-600 px-6 py-3 text-lg font-medium text-white transition hover:bg-blue-700"
           >
-            Boshqaruv Paneliga o'tish
+            Boshqaruv Paneliga o&apos;tish
           </Link>
           <a
-            href="https://t.me/YourBotName" // Replace with actual bot link if available
+            href="https://t.me/YourBotName"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-lg border border-gray-300 bg-white px-6 py-3 text-lg font-medium text-gray-700 transition hover:bg-gray-100"

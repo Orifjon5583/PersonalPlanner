@@ -1,3 +1,4 @@
+"use client";
 
 import { ArrowDownLeft, ArrowUpRight, DollarSign, Trash2 } from 'lucide-react';
 

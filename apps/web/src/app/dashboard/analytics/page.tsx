@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { BarChart, TrendingUp, CheckCircle, Calendar } from 'lucide-react';
+import { BarChart, TrendingUp } from 'lucide-react';
 
 export default function AnalyticsPage() {
     const [weeklyStats, setWeeklyStats] = useState<{ totalDone: number, dailyCounts: { date: string, count: number }[] } | null>(null);
@@ -11,12 +13,12 @@ export default function AnalyticsPage() {
             if (!token) return;
 
             try {
-                const weeklyRes = await fetch('http://localhost:3000/analytics/tasks/weekly', {
+                const weeklyRes = await fetch('http://localhost:3001/api/analytics/tasks/weekly', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (weeklyRes.ok) setWeeklyStats(await weeklyRes.json());
 
-                const prodRes = await fetch('http://localhost:3000/analytics/productivity', {
+                const prodRes = await fetch('http://localhost:3001/api/analytics/productivity', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (prodRes.ok) setProductivityStats(await prodRes.json());
@@ -78,7 +80,7 @@ export default function AnalyticsPage() {
                     </div>
                 </div>
 
-                {/* Productivity Trend (Last 30 Days) */}
+                {/* Productivity Trend */}
                 <div className="rounded-xl bg-white p-6 shadow-sm border border-gray-100 flex flex-col h-96">
                     <div className="flex items-center justify-between mb-6">
                         <div>
@@ -101,7 +103,7 @@ export default function AnalyticsPage() {
                                 <div key={i} className="flex-1 min-w-[10px] flex flex-col items-center gap-1 group relative">
                                     <div
                                         className="w-full bg-green-100 rounded-t-sm hover:bg-green-500 transition-colors duration-300"
-                                        style={{ height: `${Math.max(heightPercent, 5)}%` }} // Min height 5% for visibility
+                                        style={{ height: `${Math.max(heightPercent, 5)}%` }}
                                     ></div>
                                     {d.count > 0 && (
                                         <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-900 text-white text-[10px] px-2 py-1 rounded z-10 whitespace-nowrap">

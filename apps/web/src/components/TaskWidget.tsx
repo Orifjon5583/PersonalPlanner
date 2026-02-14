@@ -1,3 +1,4 @@
+"use client";
 
 import { CheckCircle, Circle, Clock, Trash2 } from 'lucide-react';
 

@@ -1,3 +1,4 @@
+"use client";
 
 import Link from 'next/link';
 import { useState } from 'react';
@@ -8,7 +9,7 @@ export default function Sidebar() {
 
     return (
         <>
-            {/* Mobile Toggle Button */}
+            {/* Mobile Toggle */}
             <button
                 className="fixed top-4 left-4 z-50 rounded-md bg-blue-600 p-2 text-white md:hidden"
                 onClick={() => setIsOpen(!isOpen)}
@@ -16,7 +17,7 @@ export default function Sidebar() {
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            {/* Sidebar Overlay for Mobile */}
+            {/* Overlay */}
             {isOpen && (
                 <div
                     className="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden"
@@ -24,7 +25,7 @@ export default function Sidebar() {
                 />
             )}
 
-            {/* Sidebar Content */}
+            {/* Sidebar */}
             <aside
                 className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
                     } md:static md:block`}
@@ -58,7 +59,7 @@ function NavLink({ href, label, icon }: { href: string; label: string; icon: Rea
             href={href}
             className="flex items-center gap-3 rounded-lg px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
         >
-            <span className="text-gray-500 group-hover:text-blue-600">{icon}</span>
+            <span className="text-gray-500">{icon}</span>
             <span className="font-medium">{label}</span>
         </Link>
     );

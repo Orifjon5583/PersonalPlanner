@@ -1,4 +1,3 @@
-
 "use client";
 
 import Sidebar from '../../components/Sidebar';
@@ -11,10 +10,8 @@ export default function DashboardLayout({
 }) {
     return (
         <div className="flex h-screen bg-gray-50">
-            {/* Sidebar */}
             <Sidebar />
 
-            {/* Main Content Area */}
             <div className="flex flex-1 flex-col overflow-hidden">
                 <Header />
 

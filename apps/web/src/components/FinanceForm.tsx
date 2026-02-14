@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -44,7 +43,7 @@ export default function FinanceForm({ onAdd }: FinanceFormProps) {
                 // Let's implement INCOME first correctly.
 
                 if (type === 'INCOME') {
-                    const res = await fetch('http://localhost:3000/finance/income', {
+                    const res = await fetch('http://localhost:3001/api/finance/income', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify(body)
