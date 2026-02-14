@@ -2,9 +2,14 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 text-gray-900">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 text-gray-900">
       <main className="flex w-full max-w-4xl flex-col items-center justify-center px-4 text-center">
-        <h1 className="mb-6 text-5xl font-bold tracking-tight text-blue-600">
+        {/* Logo */}
+        <div className="mb-4 h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+          <span className="text-3xl font-bold text-white">P</span>
+        </div>
+
+        <h1 className="mb-4 text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Shaxsiy Rejalashtiruvchi
         </h1>
         <p className="mb-8 max-w-lg text-xl text-gray-600">
@@ -13,24 +18,24 @@ export default function Home() {
 
         <div className="flex gap-4">
           <Link
-            href="/dashboard"
-            className="rounded-lg bg-blue-600 px-6 py-3 text-lg font-medium text-white transition hover:bg-blue-700"
+            href="/login"
+            className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg shadow-md"
           >
-            Boshqaruv Paneliga o&apos;tish
+            Kirish
           </Link>
           <a
             href="https://t.me/YourBotName"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg border border-gray-300 bg-white px-6 py-3 text-lg font-medium text-gray-700 transition hover:bg-gray-100"
+            className="rounded-lg border border-gray-300 bg-white px-8 py-3 text-lg font-semibold text-gray-700 transition-all hover:bg-gray-50 hover:shadow-md"
           >
-            Telegram Botni ochish
+            Telegram Bot
           </a>
         </div>
       </main>
 
-      <footer className="absolute bottom-4 text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} Personal Planner. All rights reserved.
+      <footer className="absolute bottom-4 text-sm text-gray-400">
+        &copy; {new Date().getFullYear()} Personal Planner
       </footer>
     </div>
   );

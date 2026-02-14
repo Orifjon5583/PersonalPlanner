@@ -47,6 +47,8 @@ app.register(authRoutes, { prefix: '/api/auth' });
 app.register(taskRoutes, { prefix: '/api/tasks' });
 app.register(financeRoutes, { prefix: '/api/finance' });
 app.register(analyticsRoutes, { prefix: '/api/analytics' });
+app.register(savedLinkRoutes, { prefix: '/api/links' });
+app.register(eventRoutes, { prefix: '/api/events' });
 
 app.get('/health', async () => {
     return { status: 'ok', timestamp: new Date() };
@@ -59,6 +61,8 @@ import { authRoutes } from './routes/auth';
 import { taskRoutes } from './routes/tasks';
 import { financeRoutes } from './routes/finance';
 import { analyticsRoutes } from './routes/analytics';
+import { savedLinkRoutes } from './routes/savedLinks';
+import { eventRoutes } from './routes/events';
 
 const start = async () => {
     try {
