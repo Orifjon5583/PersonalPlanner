@@ -24,7 +24,7 @@ export default function TaskForm({ onAdd }: TaskFormProps) {
 
             // If token exists, send to backend
             if (token) {
-                const res = await fetch('http://localhost:3001/api/tasks', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/tasks`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -78,48 +78,48 @@ export default function TaskForm({ onAdd }: TaskFormProps) {
             </h3>
 
             <div>
-                <label className="block text-sm font-bold text-gray-900 mb-1">Vazifa Nomi</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Vazifa Nomi</label>
                 <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Type size={16} className="text-gray-500" />
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Type size={18} className="text-blue-500/70" />
                     </div>
                     <input
                         type="text"
                         required
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="block w-full pl-10 rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400"
+                        className="block w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm"
                         placeholder="Masalan: Hisobot yozish"
                     />
                 </div>
             </div>
 
             <div>
-                <label className="block text-sm font-bold text-gray-900 mb-1">Boshlanish Vaqti</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Boshlanish Vaqti</label>
                 <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Clock size={16} className="text-gray-500" />
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Clock size={18} className="text-blue-500/70" />
                     </div>
                     <input
                         type="datetime-local"
                         value={startAt}
                         onChange={(e) => setStartAt(e.target.value)}
-                        className="block w-full pl-10 rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900"
+                        className="block w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm"
                     />
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-1">Muhimlik</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Muhimlik</label>
                     <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <AlertCircle size={16} className="text-gray-500" />
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <AlertCircle size={18} className={priority === 'IMPORTANT' ? 'text-red-500/70' : 'text-orange-500/70'} />
                         </div>
                         <select
                             value={priority}
                             onChange={(e) => setPriority(e.target.value)}
-                            className="block w-full pl-10 rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900"
+                            className="block w-full pl-11 pr-8 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm appearance-none"
                         >
                             <option value="NORMAL">Normal</option>
                             <option value="IMPORTANT">Muhim</option>
@@ -127,15 +127,15 @@ export default function TaskForm({ onAdd }: TaskFormProps) {
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-900 mb-1">Davomiyligi</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Davomiyligi</label>
                     <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Clock size={16} className="text-gray-500" />
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <Clock size={18} className="text-blue-500/70" />
                         </div>
                         <select
                             value={duration}
                             onChange={(e) => setDuration(Number(e.target.value))}
-                            className="block w-full pl-10 rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900"
+                            className="block w-full pl-11 pr-8 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm appearance-none"
                         >
                             <option value={30}>30 daqiqa</option>
                             <option value={60}>1 soat</option>

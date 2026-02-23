@@ -43,7 +43,7 @@ export default function FinanceForm({ onAdd }: FinanceFormProps) {
                 // Let's implement INCOME first correctly.
 
                 if (type === 'INCOME') {
-                    const res = await fetch('http://localhost:3001/api/finance/income', {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/finance/income`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify(body)
@@ -82,8 +82,8 @@ export default function FinanceForm({ onAdd }: FinanceFormProps) {
                 Moliya Qo‘shish
             </h3>
 
-            <div className="flex gap-4">
-                <label className={`flex flex-1 items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${type === 'EXPENSE' ? 'bg-red-50 border-red-200 text-red-700' : 'border-gray-200 hover:bg-gray-50'}`}>
+            <div className="flex flex-col sm:flex-row gap-3">
+                <label className={`flex flex-1 items-center justify-center gap-2 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${type === 'EXPENSE' ? 'bg-red-50/50 border-red-200 text-red-700 shadow-sm' : 'border-gray-100 hover:bg-gray-50 text-gray-500 hover:text-gray-900 border-transparent bg-gray-50'}`}>
                     <input
                         type="radio"
                         name="type"
@@ -95,7 +95,7 @@ export default function FinanceForm({ onAdd }: FinanceFormProps) {
                     <TrendingDown size={20} />
                     <span className="font-bold">Xarajat</span>
                 </label>
-                <label className={`flex flex-1 items-center justify-center gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${type === 'INCOME' ? 'bg-green-50 border-green-200 text-green-700' : 'border-gray-200 hover:bg-gray-50'}`}>
+                <label className={`flex flex-1 items-center justify-center gap-2 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${type === 'INCOME' ? 'bg-green-50/50 border-green-200 text-green-700 shadow-sm' : 'border-gray-100 hover:bg-gray-50 text-gray-500 hover:text-gray-900 border-transparent bg-gray-50'}`}>
                     <input
                         type="radio"
                         name="type"
@@ -110,34 +110,34 @@ export default function FinanceForm({ onAdd }: FinanceFormProps) {
             </div>
 
             <div>
-                <label className="block text-sm font-bold text-gray-900 mb-1">Summa (so'm)</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Summa (so'm)</label>
                 <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-gray-500 text-sm font-bold">UZS</span>
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <span className="text-gray-500 text-xs font-bold">UZS</span>
                     </div>
                     <input
                         type="number"
                         required
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        className="block w-full pl-12 rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 font-medium placeholder:text-gray-400"
+                        className="block w-full pl-12 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 font-bold placeholder:text-gray-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm"
                         placeholder="Masalan: 50000"
                     />
                 </div>
             </div>
 
             <div>
-                <label className="block text-sm font-bold text-gray-900 mb-1">Kategoriya</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Kategoriya</label>
                 <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Tag size={16} className="text-gray-500" />
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Tag size={18} className="text-blue-500/70" />
                     </div>
                     <input
                         type="text"
                         required
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="block w-full pl-10 rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-900 font-medium placeholder:text-gray-400"
+                        className="block w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 font-medium placeholder:text-gray-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm"
                         placeholder="Masalan: Oziq-ovqat"
                     />
                 </div>

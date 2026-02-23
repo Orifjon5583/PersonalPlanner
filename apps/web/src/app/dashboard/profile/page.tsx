@@ -28,7 +28,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         if (!token) return;
-        fetch('http://localhost:3001/api/links', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/links`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.ok ? res.json() : [])
@@ -41,7 +41,7 @@ export default function ProfilePage() {
         if (!token) return;
 
         try {
-            const res = await fetch('http://localhost:3001/api/links', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/links`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ siteName, siteUrl, username, password, notes }),
@@ -60,7 +60,7 @@ export default function ProfilePage() {
     const handleDelete = async (id: string) => {
         if (!token) return;
         try {
-            await fetch(`http://localhost:3001/api/links/${id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/links/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` },
             });
@@ -126,51 +126,53 @@ export default function ProfilePage() {
 
             {/* Add Link Form */}
             {showForm && (
-                <form onSubmit={handleAdd} className="rounded-xl bg-white p-6 shadow-sm border border-gray-100 space-y-4">
-                    <h3 className="font-bold text-gray-900">Yangi Sayt Qo'shish</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleAdd} className="rounded-xl bg-white p-6 shadow-sm border border-gray-100 space-y-5">
+                    <h3 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">Yangi Sayt Qo'shish</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Sayt Nomi</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Sayt Nomi</label>
                             <div className="relative">
-                                <Globe size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <Globe size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500/70" />
                                 <input type="text" required value={siteName} onChange={e => setSiteName(e.target.value)}
-                                    placeholder="Masalan: Gmail" className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
+                                    placeholder="Masalan: Gmail" className="w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm placeholder:text-gray-400" />
                             </div>
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">URL</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Elektron manzil (URL)</label>
                             <input type="text" required value={siteUrl} onChange={e => setSiteUrl(e.target.value)}
-                                placeholder="gmail.com" className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
+                                placeholder="gmail.com" className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm placeholder:text-gray-400" />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Login</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Login yoki pochta</label>
                             <div className="relative">
-                                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500/70" />
                                 <input type="text" value={username} onChange={e => setUsername(e.target.value)}
-                                    placeholder="email yoki login" className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
+                                    placeholder="Foydalanuvchi nomi" className="w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm placeholder:text-gray-400" />
                             </div>
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Parol</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Parol</label>
                             <div className="relative">
-                                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500/70" />
                                 <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-                                    placeholder="••••••••" className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
+                                    placeholder="••••••••" className="w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm placeholder:text-gray-400" />
                             </div>
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Izoh</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Izoh</label>
                         <div className="relative">
-                            <FileText size={16} className="absolute left-3 top-3 text-gray-400" />
+                            <FileText size={18} className="absolute left-3.5 top-3.5 text-blue-500/70" />
                             <textarea value={notes} onChange={e => setNotes(e.target.value)}
                                 placeholder="Qo'shimcha ma'lumot..." rows={2}
-                                className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 resize-none" />
+                                className="w-full pl-11 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl text-gray-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all sm:text-sm placeholder:text-gray-400 resize-none" />
                         </div>
                     </div>
-                    <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                        Saqlash
-                    </button>
+                    <div className="pt-2">
+                        <button type="submit" className="bg-blue-600 w-full sm:w-auto text-white px-8 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-sm focus:ring-4 focus:ring-blue-500/30">
+                            Saqlash
+                        </button>
+                    </div>
                 </form>
             )}
 

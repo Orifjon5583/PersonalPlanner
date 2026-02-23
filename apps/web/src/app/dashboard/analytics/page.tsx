@@ -13,12 +13,12 @@ export default function AnalyticsPage() {
             if (!token) return;
 
             try {
-                const weeklyRes = await fetch('http://localhost:3001/api/analytics/tasks/weekly', {
+                const weeklyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/analytics/tasks/weekly`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (weeklyRes.ok) setWeeklyStats(await weeklyRes.json());
 
-                const prodRes = await fetch('http://localhost:3001/api/analytics/productivity', {
+                const prodRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/analytics/productivity`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (prodRes.ok) setProductivityStats(await prodRes.json());
@@ -55,28 +55,28 @@ export default function AnalyticsPage() {
                         </div>
                     </div>
 
-                    <div className="flex-1 flex items-end justify-between gap-2 pt-4 border-b border-gray-100 pb-2">
+                    <div className="flex-1 flex items-end justify-between gap-1 pt-4 border-t border-gray-100 pb-2 h-48 mt-4">
                         {weeklyStats?.dailyCounts.map((d, i) => {
                             const heightPercent = (d.count / getMaxCount(weeklyStats.dailyCounts)) * 100;
                             const dayName = new Date(d.date).toLocaleDateString('uz-UZ', { weekday: 'short' });
                             return (
-                                <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                                    <div className="relative w-full flex justify-center items-end h-48 bg-gray-50 rounded-t-lg overflow-hidden">
+                                <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
+                                    <div className="relative w-full flex justify-center items-end bg-blue-50/50 rounded-t-sm h-full mx-0.5 sm:mx-1 transition-all">
                                         <div
-                                            className="w-full mx-1 bg-blue-500 rounded-t-md transition-all duration-500 group-hover:bg-blue-600"
-                                            style={{ height: `${heightPercent}%` }}
+                                            className="w-full bg-blue-500 rounded-t-sm transition-all duration-700 hover:bg-blue-600"
+                                            style={{ height: `${Math.max(heightPercent, 2)}%` }}
                                         ></div>
-                                        {d.count > 0 && (
-                                            <span className="absolute -top-6 text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                        {d.count >= 0 && (
+                                            <span className="absolute bottom-full mb-1 text-[10px] font-bold text-gray-400 group-hover:text-blue-600 group-hover:bg-blue-50 px-1 rounded transition-colors">
                                                 {d.count}
                                             </span>
                                         )}
                                     </div>
-                                    <span className="text-xs font-medium text-gray-500 uppercase">{dayName}</span>
+                                    <span className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase">{dayName}</span>
                                 </div>
                             );
                         })}
-                        {!weeklyStats && <p className="w-full text-center text-gray-400">Yuklanmoqda...</p>}
+                        {!weeklyStats && <div className="w-full h-full flex justify-center items-center text-gray-400">Yuklanmoqda...</div>}
                     </div>
                 </div>
 
@@ -96,11 +96,11 @@ export default function AnalyticsPage() {
                         </div>
                     </div>
 
-                    <div className="flex-1 flex items-end gap-1 overflow-x-auto pb-2">
+                    <div className="flex-1 flex items-end gap-1 overflow-x-auto pb-2 h-48">
                         {productivityStats?.dailyTrend.map((d, i) => {
                             const heightPercent = (d.count / getMaxCount(productivityStats.dailyTrend)) * 100;
                             return (
-                                <div key={i} className="flex-1 min-w-[10px] flex flex-col items-center gap-1 group relative">
+                                <div key={i} className="flex-1 min-w-[10px] h-full flex flex-col justify-end items-center gap-1 group relative">
                                     <div
                                         className="w-full bg-green-100 rounded-t-sm hover:bg-green-500 transition-colors duration-300"
                                         style={{ height: `${Math.max(heightPercent, 5)}%` }}

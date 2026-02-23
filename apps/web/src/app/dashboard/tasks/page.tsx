@@ -38,7 +38,7 @@ export default function TasksPage() {
         if (!token) return;
 
         try {
-            const res = await fetch('http://localhost:3001/api/tasks', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/tasks`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

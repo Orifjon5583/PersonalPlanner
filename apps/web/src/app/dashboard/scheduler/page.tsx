@@ -44,7 +44,7 @@ export default function SchedulerPage() {
     useEffect(() => {
         if (!token) return;
         const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-        fetch(`http://localhost:3001/api/events?month=${monthStr}`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/events?month=${monthStr}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => res.ok ? res.json() : [])
@@ -67,7 +67,7 @@ export default function SchedulerPage() {
         const endAt = new Date(year, month, selectedDate, parseInt(endTime.split(':')[0]), parseInt(endTime.split(':')[1]));
 
         try {
-            const res = await fetch('http://localhost:3001/api/events', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/events`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ title, description, color, startAt: startAt.toISOString(), endAt: endAt.toISOString() }),
@@ -85,7 +85,7 @@ export default function SchedulerPage() {
     const handleDeleteEvent = async (id: string) => {
         if (!token) return;
         try {
-            await fetch(`http://localhost:3001/api/events/${id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/events/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` },
             });

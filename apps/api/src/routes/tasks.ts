@@ -18,14 +18,14 @@ export const taskRoutes: FastifyPluginAsyncZod = async (app) => {
                 dueAt: z.string().optional()
             })
         }
-    }, async (req) => {
-        const { title, description, priority, durationMinutes, startAt, dueAt } = req.body as any;
+    }, async (req: any) => {
+        const { title, description, priority, durationMinutes, startAt, dueAt } = req.body;
         return TaskService.create(req.user.id, {
             title, description, priority, durationMinutes, startAt, dueAt
         });
     });
 
-    app.get('/', async (req) => {
+    app.get('/', async (req: any) => {
         // Add filters as needed
         return prisma.task.findMany({
             where: { userId: req.user.id }
@@ -36,8 +36,8 @@ export const taskRoutes: FastifyPluginAsyncZod = async (app) => {
         schema: {
             params: z.object({ id: z.string() })
         }
-    }, async (req) => {
-        const { id } = req.params as { id: string };
+    }, async (req: any) => {
+        const { id } = req.params;
         return prisma.task.update({
             where: { id, userId: req.user.id },
             data: { status: TaskStatus.DONE, actualMinutes: 60 } // Default actual? Or pass it.
@@ -48,13 +48,13 @@ export const taskRoutes: FastifyPluginAsyncZod = async (app) => {
         schema: {
             body: z.object({ date: z.string().optional() }) // YYYY-MM-DD or ISO
         }
-    }, async (req) => {
-        const body = req.body as { date?: string };
+    }, async (req: any) => {
+        const body = req.body;
         const date = body.date ? new Date(body.date) : new Date();
         return TaskService.autoPlan(req.user.id, date);
     });
 
-    app.get('/gaps', async (req) => {
+    app.get('/gaps', async (req: any) => {
         return TaskService.getWorkGaps(req.user.id, new Date());
     });
 }

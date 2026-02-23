@@ -3,6 +3,7 @@ import { prisma } from '../app';
 import { StatsService } from '../services/statsService';
 
 import { bot } from './instance';
+import { Markup } from 'telegraf';
 export { bot };
 
 // Bot initialized in instance.ts
@@ -10,7 +11,10 @@ export { bot };
 
 bot.start(async (ctx) => {
     const chatId = ctx.chat.id.toString();
-    await ctx.reply(`Welcome! Your Chat ID is: ${chatId}. Use this to link your account.`);
+    await ctx.reply(`Welcome! Your Chat ID is: ${chatId}. Use this to link your account.`, Markup.keyboard([
+        ['📊 Hisobot', '💰 Qolgan mablag‘'],
+        ['📋 Vazifalar', '✅ Topshirilgan']
+    ]).resize());
 
     // Logic to handle deep linking if start payload exists
     const payload = (ctx as any).startPayload;
@@ -42,6 +46,15 @@ import './commands'; // Import commands to register them
 
 // Launch bot needs to be separate or integrated into app startup
 export const launchBot = () => {
+    bot.telegram.setMyCommands([
+        { command: 'today', description: 'Bugungi vazifalar' },
+        { command: 'add', description: 'Tezkor vazifa qo‘shish' },
+        { command: 'plan', description: 'Kunni avtomatik rejalashtirish' },
+        { command: 'stats', description: 'Haftalik statistika' },
+        { command: 'menu', description: 'Qo‘shimcha menyu' },
+        { command: 'start', description: 'Web hisobni bog‘lash' }
+    ]).catch(console.error);
+
     bot.launch().then(() => console.log('Bot started')).catch(err => console.error('Bot launch error:', err));
     process.once('SIGINT', () => bot.stop('SIGINT'));
     process.once('SIGTERM', () => bot.stop('SIGTERM'));

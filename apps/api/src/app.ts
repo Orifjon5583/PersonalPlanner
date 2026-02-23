@@ -14,6 +14,7 @@ const envSchema = z.object({
     JWT_ACCESS_SECRET: z.string(),
     JWT_REFRESH_SECRET: z.string(),
     TELEGRAM_BOT_TOKEN: z.string(),
+    FRONTEND_URL: z.string().optional(),
 });
 
 const env = envSchema.parse(process.env);
@@ -28,7 +29,7 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.register(cors, {
-    origin: '*', // Adjust in production
+    origin: env.FRONTEND_URL ? [env.FRONTEND_URL, 'http://localhost:3000'] : '*',
 });
 
 app.register(jwt, {
